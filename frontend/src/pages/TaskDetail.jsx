@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-// Usamos la variable de entorno de Vite con fallback a localhost
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const TaskDetail = () => {

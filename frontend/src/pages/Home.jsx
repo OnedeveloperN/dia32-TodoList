@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
-// Definimos la URL base usando la variable de entorno o fallback a localhost
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const Home = () => {
@@ -11,7 +10,7 @@ export const Home = () => {
     // Estado para el filtro: 'all' | 'completed' | 'pending'
     const [filter, setFilter] = useState("all");
 
-    // 1. Cargar las tareas desde la API al montar el componente
+    // Cargar las tareas desde la API al montar el componente
     useEffect(() => {
         fetch(`${API_URL}/api/tasks`)
             .then((response) => response.json())
@@ -19,7 +18,7 @@ export const Home = () => {
             .catch((error) => console.error("Error fetching tasks:", error));
     }, []);
 
-    // 2. Alternar estado completada / pendiente (PUT)
+    // Alternar estado completada / pendiente (PUT)
     const toggleComplete = async (taskToToggle) => {
         const updatedStatus = !taskToToggle.completed;
 
@@ -43,7 +42,7 @@ export const Home = () => {
         }
     };
 
-    // 3. Eliminar tarea (DELETE)
+    // Eliminar tarea (DELETE)
     const deleteTask = async (id) => {
         if (!confirm("¿Seguro que deseas eliminar esta tarea?")) return;
 
@@ -61,7 +60,7 @@ export const Home = () => {
         }
     };
 
-    // 4. Lógica de filtrado en memoria
+    // Lógica de filtrado en memoria
     const filteredTasks = tasks.filter((task) => {
         if (filter === "completed") return task.completed;
         if (filter === "pending") return !task.completed;
@@ -83,7 +82,6 @@ export const Home = () => {
                 </Link>
             </header>
 
-            {/* BARRA DE FILTROS */}
             <div className="flex gap-2 mb-6 bg-gray-100 p-2 rounded-lg">
                 <button
                     onClick={() => setFilter("all")}
