@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+
+// Definimos la URL base usando la variable de entorno o fallback a localhost
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export const EditTask = () => {
     const { id } = useParams();
@@ -13,13 +16,9 @@ export const EditTask = () => {
     const [task, setTask] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/tasks/${id}`)
+        fetch(`${API_URL}/api/tasks/${id}`)
             .then((response) => response.json())
-            .then((data) => {
-                setTask(data);
-                titleRef.current.value = data.title;
-                descriptionRef.current.value = data.description || "";
-            })
+            .then((data) => setTask(data))
             .catch((error) => console.error("Error fetching task:", error));
     }, [id]);
 
@@ -39,7 +38,7 @@ export const EditTask = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+            const response = await fetch(`${API_URL}/api/tasks/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -65,7 +64,7 @@ export const EditTask = () => {
     };
 
     return (
-        <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md mt-6">
             <h1 className="text-2xl font-bold mb-4">Editar Tarea</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -76,7 +75,9 @@ export const EditTask = () => {
                         type="text"
                         id="title"
                         ref={titleRef}
+                        defaultValue={task.title}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        required
                     />
                 </div>
                 <div>
@@ -86,15 +87,26 @@ export const EditTask = () => {
                     <textarea
                         id="description"
                         ref={descriptionRef}
+                        defaultValue={task.description || ""}
+                        rows="4"
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        required
                     />
                 </div>
-                <button
-                    type="submit"
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
-                >
-                    Guardar Cambios
-                </button>
+                <div className="flex gap-3">
+                    <button
+                        type="submit"
+                        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                    >
+                        Guardar Cambios
+                    </button>
+                    <Link
+                        to={`/task/${id}`}
+                        className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                    >
+                        Cancelar
+                    </Link>
+                </div>
             </form>
         </div>
     );

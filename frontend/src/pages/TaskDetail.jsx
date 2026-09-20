@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
+// Usamos la variable de entorno de Vite con fallback a localhost
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export const TaskDetail = () => {
     const { id } = useParams();
     const [task, setTask] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/tasks/${id}`)
+        fetch(`${API_URL}/api/tasks/${id}`)
             .then((response) => response.json())
             .then((data) => setTask(data))
             .catch((error) => console.error("Error fetching task:", error));

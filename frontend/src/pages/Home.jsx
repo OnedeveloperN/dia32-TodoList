@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
+// Definimos la URL base usando la variable de entorno o fallback a localhost
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export const Home = () => {
     const { user } = useUser();
     const [tasks, setTasks] = useState([]);
@@ -10,7 +13,7 @@ export const Home = () => {
 
     // 1. Cargar las tareas desde la API al montar el componente
     useEffect(() => {
-        fetch("http://localhost:3000/api/tasks")
+        fetch(`${API_URL}/api/tasks`)
             .then((response) => response.json())
             .then((data) => setTasks(data))
             .catch((error) => console.error("Error fetching tasks:", error));
@@ -21,7 +24,7 @@ export const Home = () => {
         const updatedStatus = !taskToToggle.completed;
 
         try {
-            const response = await fetch(`http://localhost:3000/api/tasks/${taskToToggle.id}`, {
+            const response = await fetch(`${API_URL}/api/tasks/${taskToToggle.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ completed: updatedStatus }),
@@ -45,7 +48,7 @@ export const Home = () => {
         if (!confirm("¿Seguro que deseas eliminar esta tarea?")) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+            const response = await fetch(`${API_URL}/api/tasks/${id}`, {
                 method: "DELETE",
             });
 

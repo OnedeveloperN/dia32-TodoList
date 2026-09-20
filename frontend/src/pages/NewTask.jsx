@@ -2,6 +2,9 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
+// Definimos la URL base usando la variable de entorno o fallback a localhost
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export const NewTask = () => {
     const { user } = useUser();
     const navigate = useNavigate();
@@ -21,7 +24,8 @@ export const NewTask = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:3000/api/tasks", {
+            // Concatenamos dinámicamente /api/tasks
+            const response = await fetch(`${API_URL}/api/tasks`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -55,7 +59,6 @@ export const NewTask = () => {
                     <label htmlFor="title" className="block text-sm font-medium text-gray-700">
                         Título
                     </label>
-                    {/* Conectamos la referencia directamente sin value ni onChange */}
                     <input
                         type="text"
                         id="title"
